@@ -2,6 +2,9 @@ package entity;
 
 import javax.annotation.Generated;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "persons")
@@ -22,6 +25,15 @@ public class Person {
     @Basic(optional = false)
     @Column(name = "person_last_name")
     private String lastName;
+
+    @JoinTable(name = "person_hobbies", joinColumns = {
+            @JoinColumn(name = "person_id", referencedColumnName = "person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "hobby_name", referencedColumnName = "hobby_name")})
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private List<Hobby> hobbies = new ArrayList<>();
+
+    @ManyToOne()
+    private Address address;
 
     public Person() {}
     public Person(String email, String phone, String firstName, String lastName) {
@@ -61,5 +73,41 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void addHobby(Hobby hobby) {
+        if(!this.hobbies.contains(hobby)) {
+            this.hobbies.add(hobby);
+            hobby.getPersons().add(this);
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<Hobby> getHobbies() {
+        return hobbies;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id) &&
+                Objects.equals(email, person.email) &&
+                Objects.equals(phone, person.phone) &&
+                Objects.equals(firstName, person.firstName) &&
+                Objects.equals(lastName, person.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, phone, firstName, lastName);
     }
 }

@@ -1,6 +1,8 @@
 package entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "addresses")
@@ -16,7 +18,10 @@ public class Address {
     @Basic(optional = false)
     @Column(name = "address_zip")
     private Integer zip;
-x
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Person> persons = new ArrayList<>();
+
     public Address() {}
 
     public Address(String street, String city, Integer zip) {
@@ -47,5 +52,12 @@ x
 
     public void setZip(Integer zip) {
         this.zip = zip;
+    }
+
+    public void addPerson(Person person) {
+        if(!persons.contains(person)) {
+            persons.add(person);
+            person.setAddress(this);
+        }
     }
 }

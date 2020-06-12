@@ -24,8 +24,8 @@ public class User implements Serializable {
   @Column(name = "user_pass")
   private String userPass;
   @JoinTable(name = "user_roles", joinColumns = {
-    @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
-    @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
+          @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
+          @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
   @ManyToMany
   private List<Role> roleList = new ArrayList();
 
