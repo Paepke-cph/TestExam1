@@ -1,11 +1,14 @@
 package utils;
 
+import dtos.PersonDTO;
 import entity.Address;
 import entity.Hobby;
 import entity.Person;
+import facades.PersonFacade;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.List;
 
 public class Tester {
     public static void main(String[] args) {
@@ -38,6 +41,10 @@ public class Tester {
         em.getTransaction().commit();
 
         em.close();
+
+        PersonFacade personFacade = PersonFacade.getUserFacade(emf);
+        List<PersonDTO> personDTO = personFacade.findPersonByName("P", "Larsen");
+
         emf.close();
     }
 }

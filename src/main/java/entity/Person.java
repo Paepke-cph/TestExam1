@@ -1,6 +1,7 @@
 package entity;
 
-import javax.annotation.Generated;
+import dtos.PersonDTO;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "persons")
+@NamedQuery(
+        name = "Person.findByFullName",
+        query = "select p from Person p where p.firstName LIKE :firstName AND p.lastName LIKE :lastName")
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,13 +38,25 @@ public class Person {
 
     @ManyToOne()
     private Address address;
-
     public Person() {}
+    public Person(PersonDTO personDTO) {
+        this.id = personDTO.getId();
+        this.email = personDTO.getEmail();
+        this.phone = personDTO.getPhone();
+        this.firstName = personDTO.getFirstName();
+        this.lastName = personDTO.getLastName();
+        this.hobbies = personDTO.getHobbies();
+        this.address = personDTO.getAddress();
+    }
     public Person(String email, String phone, String firstName, String lastName) {
         this.email = email;
         this.phone = phone;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -82,16 +98,16 @@ public class Person {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public List<Hobby> getHobbies() {
         return hobbies;
     }
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
     @Override
